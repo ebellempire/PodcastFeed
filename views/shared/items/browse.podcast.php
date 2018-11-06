@@ -1,4 +1,10 @@
 <?php
+/**
+ * Helpers
+ */
+require_once 'helpers.php';
+
+// Channel variables
 $location = WEB_ROOT.'/items/browse?output=podcast';	
 $podcast_link = get_option('podcast_link') ? get_option('podcast_link') : WEB_ROOT.'/';
 $podcast_author = get_option('podcast_author') ? get_option('podcast_author') : option('site_title');
@@ -7,51 +13,103 @@ $podcast_email = get_option('podcast_email') ? get_option('podcast_email') : opt
 $podcast_image_url = get_option('podcast_image_url') ? get_option('podcast_image_url') : null;
 $podcast_description = get_option('podcast_description') ? get_option('podcast_description') : null;
 $podcast_language = get_option('podcast_language') ? get_option('podcast_language') : null;
+$podcast_category = get_option('podcast_category') ? get_option('podcast_category') : null; // @TODO: add multiple category support
+$podcast_copyright = date('Y').' '.$podcast_title; // @TODO: add option
 
 /**
- * Create the parent feed
+ * Create the parent channel feed
  */
-$feed = new Zend_Feed_Writer_Feed;
-$feed->setTitle($podcast_title);
-$feed->setLink($podcast_link);
-$feed->setFeedLink($location, 'rss');
-$feed->setImage(array(
-	'uri'	=> $podcast_image_url,
-	'link'	=> $podcast_image_url,
-	'title'	=> $podcast_title,
-));
-$feed->setLanguage($podcast_language);
-$feed->setDescription($podcast_description);
-$feed->addAuthor(array(
-	'name'  => $podcast_author,
-	'uri'   => WEB_ROOT,
-	'email' => $podcast_email,
-));
-$feed->setDateModified(time());
-$feed->addHub('https://pubsubhubbub.appspot.com/');
+ 
+$itunesns='http://www.itunes.com/dtds/podcast-1.0.dtd'; 
+$atomns='http://www.w3.org/2005/Atom';
+
+$xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" 
+xmlns:atom="http://www.w3.org/2005/Atom" />');  
+
+
+$channel = $xml->addChild('channel');
+$channel->addChild('link',$podcast_link); 
+$channel->addChild('pubDate',gmdate('r')); 
+$channel->addChild('language',$podcast_language); 
+$channel->addChild('webMaster',$podcast_email.' ('.$podcast_author.')'); 
+$channel->addChild('description',$podcast_description); 
+$channel->addChild('title',$podcast_title); 
+$channel->addChild('copyright',$podcast_copyright); 
+
+$atomlink=$channel->addChild('link','',$atomns); 
+	$atomlink->addAttribute('href',WEB_ROOT.$_SERVER['REQUEST_URI']); 
+	$atomlink->addAttribute('rel',"self"); 
+	$atomlink->addAttribute('type',"application/rss+xml"); 
+
+$image=$channel->addChild('image',''); 
+	$image->addChild('url',$podcast_image_url);
+	$image->addChild('title',$podcast_title);
+	$image->addChild('link',$podcast_link);
+	
+$owner=$channel->addChild('owner','', $itunesns); 
+	$owner->addChild('email',$podcast_email, $itunesns); 
+	$owner->addChild('name',$podcast_title, $itunesns); 
+
+$cat=$channel->addChild('category','',$itunesns); 
+$cat->addAttribute('text',$podcast_category); 
+
+$channel->addChild('author',$podcast_author, $itunesns); 
+$channel->addChild('type','episodic', $itunesns); // episodic or serial @TODO: add option
 
 /**
  * Create the entries
  */ 
-foreach( loop( 'items' ) as $item )
-{
+foreach( loop( 'items' ) as $item ){
 	if($item->getItemType()['name'] == 'Podcast Episode'){
-		$title=  metadata( $item, array( 'Dublin Core', 'Title' ) ) ? metadata( $item, array( 'Dublin Core', 'Title' ) ) : 'Untitled';
-		$url = WEB_ROOT.'/items/show/'.$item->id;
-		$desc=metadata($item,array('Dublin Core','Description'));
-	
-		$entry = $feed->createEntry();
-			$entry->setTitle($title);
-			$entry->setLink($url);
-			$entry->addAuthor(array('name'  => $podcast_author));
-			$entry->setDateModified(strtotime($item->modified));
-			$entry->setDateCreated(strtotime($item->added));
-			$entry->setContent($desc);
-		$feed->addEntry($entry);		
+		
+		// Item Variables
+		$episode_title=  metadata( $item, array( 'Dublin Core', 'Title' ) ) ? metadata( $item, array( 'Dublin Core', 'Title' ) ) : 'Untitled';
+		$episode_url = WEB_ROOT.'/items/show/'.$item->id;
+		$episode_guid=$url;
+		$episode_description=metadata($item,array('Dublin Core','Description'));
+		$episode_is_explicit=($e=metadata($item,array('Item Type Metadata','Explicit'))) ? $e : 'no';
+		
+		// File Enclosure variables
+		foreach( loop('files', $item->Files ) as $file ){
+
+			if(enclosureIsMP3(metadata($file, 'MIME Type'))){
+				$enclosure_url=file_display_url($file,'original');
+				$enclosure_type=metadata($file, 'MIME Type');
+				$enclosure_size = metadata($file, 'Size');	
+				$mp3 = new MP3File($enclosure_url);
+				$getDuration = $mp3->getDuration();
+				$enclosure_duration = MP3File::formatTime($getDuration);	
+				continue; // ...we have a file so stop the loop here		
+			}
+			
+		}
+		
+		if($enclosure_url){
+			
+			$episode = $channel->addChild('item'); 
+			$episode->addChild('link',$episode_url); 
+			$episode->addChild('pubDate',strtotime($item->modified)); 
+			$episode->addChild('title',$episode_title); 
+			$episode->addChild('description',$episode_description); 
+			$episode->addChild('summary',$episode_description,$itunesns); 
+			$episode->addChild('guid',$episode_guid);
+			$episode->addChild('explicit',$episode_is_explicit,$itunesns); 	
+			$episode->addChild('duration',$enclosure_duration,$itunesns); 
+			
+			$enclosure=$episode->addChild('enclosure',''); 
+			$enclosure->addAttribute('url',$enclosure_url); 
+			$enclosure->addAttribute('length',$enclosure_size); 
+			$enclosure->addAttribute('type',$enclosure_type); 
+		
+		} 
+					
 	}
 }
 
 /**
  * Render the resulting feed
  */
-echo $feed->export('rss');
+header('Content-type: text/xml'); 
+$output=$xml->asXML(); 
+echo $output; 
