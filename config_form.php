@@ -211,9 +211,11 @@
 	get_option('podcast_link') && 
 	get_option('podcast_email') && 
 	get_option('podcast_category')):?>
-	<a class="view-feed button blue big" href="<?php echo WEB_ROOT.'/items/browse?output=podcast';?>" target="_blank">
-		<?php echo __('View Podcast Feed');?>
-	</a>
+	<div style="display:none">
+		<a class="view-feed button blue big" href="<?php echo WEB_ROOT.'/items/browse?output=podcast';?>" target="_blank">
+			<?php echo __('View Podcast Feed');?>
+		</a>
+	</div>
 	<script>
 		jQuery(document).ready(function(){
 			var feedlink=jQuery('.view-feed');
