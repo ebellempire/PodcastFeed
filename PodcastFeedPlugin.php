@@ -22,6 +22,7 @@ class PodcastFeedPlugin extends Omeka_Plugin_AbstractPlugin{
 		'podcast_link'=>null,
 		'podcast_email'=>null,
 		'podcast_category'=>null,
+		'podcast_type'=>'episodic',
 	);
 	
     public function hookConfigForm(){
@@ -37,6 +38,7 @@ class PodcastFeedPlugin extends Omeka_Plugin_AbstractPlugin{
         set_option('podcast_link', $_POST['podcast_link']);
         set_option('podcast_email', $_POST['podcast_email']);
         set_option('podcast_category', $_POST['podcast_category']);
+        set_option('podcast_type', $_POST['podcast_type']);
     }	    
     	
 	public function filterResponseContexts( $contexts ){
@@ -64,14 +66,34 @@ class PodcastFeedPlugin extends Omeka_Plugin_AbstractPlugin{
 		// Item Type Definition
 		$PodcastItemType = array(
 			'name'=> 'Podcast Episode',
-			'description' => 'Serialized audio content, delivered via web syndication.',
+			'description' => 'Serialized or episodic audio content, delivered via web syndication.',
 		);	
 		$podcastElements=array(
 			array(
-				'name'=>'Explicit',
-				'description'=>'Enter "Yes" or "No" to indicate whether this episode contains explicit language or topics.',
+				'name'=>'Episode',
+				'description'=>'The episode number. Specify a non-zero integer (1, 2, 3, etc.) representing your episode number. Use this tag to specify the recommended order for episodes within a season. By default, episodes will appear in descending order from newest to oldest.',
 				'order'=>1
-			),			
+			),
+			array(
+				'name'=>'Season',
+				'description'=>'The episode season number. Specify a non-zero integer (1, 2, 3, etc.) representing your season number. If only one season exists in the RSS feed, podcast directories may not display a season number. When you add a second season to the RSS feed, the season numbers will be displayed. If your podcast will not be released on a season schedule, it is recommended to leave this field blank.',
+				'order'=>2
+			),		
+			array(
+				'name'=>'Episode Type',
+				'description'=>'The episode type. Specify "full" when you are submitting the complete content of your show. Specify "trailer" when you are submitting a short, promotional piece of content that represents a preview of your current show. Specify "bonus" when you are submitting extra content for your show (for example, behind the scenes information or interviews with the cast) or cross-promotional content for another show.',
+				'order'=>3
+			),					
+			array(
+				'name'=>'Explicit',
+				'description'=>'The episode parental advisory information. If you specify "yes," "explicit," or "true," indicating the presence of explicit content, podcast directories may add an Explicit parental advisory graphic for your episode. Episodes containing explicit material aren’t available in some territories. If you specify "no," "clean," or "false," indicating that the episode does not contain explicit language or adult content, podcast directories may display a Clean parental advisory graphic for your episode.',
+				'order'=>4
+			),	
+			array(
+				'name'=>'Block',
+				'description'=>'The episode show or hide status. Specifying "Yes" prevents that episode from appearing in podcast directories. For example, you might want to block a specific episode if you know that its content would otherwise cause the entire podcast to be removed from podcast directories. Specifying any value other than Yes has no effect.',
+				'order'=>5
+			),													
 		);	
 		// Item Type Elements to be added
 		$add_elements=array();
