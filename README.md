@@ -9,5 +9,5 @@ After saving the plugin settings, your feed will be available at `/items/browse?
 # About Podcast Distribution
 Once you have added some episodes, follow the usual steps to distribute your podcast. It is strongly recommended to register your podcast with both the Apple and Google podcast directories. The Apple directory is generally considered to be the most critical.
 
-    - [Apple iTunes Connect Resources and Help: Podcasts](https://itunespartner.apple.com/en/podcasts/overview)
-    - [Google Play Music Podcast RSS Feed Specifications](https://support.google.com/googleplay/podcasts/answer/6260341)
+- [Apple iTunes Connect Resources and Help: Podcasts](https://itunespartner.apple.com/en/podcasts/overview)
+- [Google Play Music Podcast RSS Feed Specifications](https://support.google.com/googleplay/podcasts/answer/6260341)
