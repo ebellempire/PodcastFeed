@@ -11,6 +11,7 @@ class PodcastFeedPlugin extends Omeka_Plugin_AbstractPlugin{
 	protected $_filters = array(
 		'response_contexts',
 		'action_contexts',
+		'items_browse_per_page',
 	);
 		
 	protected $_options = array(
@@ -39,7 +40,15 @@ class PodcastFeedPlugin extends Omeka_Plugin_AbstractPlugin{
         set_option('podcast_email', $_POST['podcast_email']);
         set_option('podcast_category', $_POST['podcast_category']);
         set_option('podcast_type', $_POST['podcast_type']);
-    }	    
+    }	 
+    
+	public function filterItemsBrowsePerPage( $perPage ){
+		// @TODO: if the loop on items/browse was made more specific (e.g. limited by item type), I wouldn't need this
+		if( isset($_GET["output"]) && $_GET["output"] == 'podcast'){
+			$perPage=null; // no pagination
+		}
+		return $perPage;
+	}       
     	
 	public function filterResponseContexts( $contexts ){
 		$contexts['podcast'] = array(
