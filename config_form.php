@@ -9,6 +9,21 @@
 
 	<div class="field">
 	    <div class="two columns alpha">
+	        <label for="podcast_type"><?php echo __('Podcast Type'); ?></label>
+	    </div>
+	    <div class="inputs five columns omega">
+	        <p class="explanation">
+	            <?php echo __("Choose a podcast type."); ?>
+	        </p>
+	        <?php echo get_view()->formSelect('podcast_type', get_option('podcast_type'), null, array(
+				'episodic' => __('Episodic'),
+				'serial' => __('Serial'),
+		        )); ?>
+	            <p class="helper"><?php echo __('Specify episodic for stand-alone episodes or when you want your episodes presented and recommended newest-to-oldest, which is the default and most common type of podcast. Specify serial when you want your episodes presented and recommended oldest-to-newest.'); ?></p>		        
+	    </div>
+	</div>	
+	<div class="field">
+	    <div class="two columns alpha">
 	        <label for="podcast_category"><?php echo __('Podcast Category'); ?></label>
 	    </div>
 	    <div class="inputs five columns omega">
@@ -18,71 +33,71 @@
 	        <?php echo get_view()->formSelect('podcast_category', get_option('podcast_category'), null, array(
 				'' => __('Select a category'),
 				'Arts' => __('Arts'),
-				'Design' => __('--  Design'),
-				'Fashion &amp; Beauty' => __('--  Fashion & Beauty'),
-				'Food' => __('--  Food'),
-				'Literature' => __('--  Literature'),
-				'Performing Arts' => __('--  Performing Arts'),
-				'Visual Arts' => __('--  Visual Arts'),
+				'Arts > Design' => __('Arts > Design'),
+				'Arts > Fashion &amp; Beauty' => __('Arts > Fashion & Beauty'),
+				'Arts > Food' => __('Arts >  Food'),
+				'Literature' => __('Arts >  Literature'),
+				'Arts > Performing Arts' => __('Arts >  Performing Arts'),
+				'Arts > Visual Arts' => __('Arts > Visual Arts'),
 				'Business' => __('Business'),
-				'Business News' => __('--  Business News'),
-				'Careers' => __('--  Careers'),
-				'Investing' => __('--  Investing'),
-				'Management &amp; Marketing' => __('--  Management & Marketing'),
-				'Shopping' => __('--  Shopping'),
+				'Business > Business News' => __('Business > Business News'),
+				'Business > Careers' => __('Business > Careers'),
+				'Business > Investing' => __('Business > Investing'),
+				'Business > Management &amp; Marketing' => __('Business > Management & Marketing'),
+				'Business > Shopping' => __('Business > Shopping'),
 				'Comedy' => __('Comedy'),
 				'Education' => __('Education'),
-				'Educational Technology' => __('--  Educational Technology'),
-				'Higher Education' => __('--  Higher Education'),
-				'K-12' => __('--  K-12'),
-				'Language Courses' => __('--  Language Courses'),
-				'Training' => __('--  Training'),
+				'Education > Educational Technology' => __('Education > Educational Technology'),
+				'Education > Higher Education' => __('Education > Higher Education'),
+				'Education > K-12' => __('Education > K-12'),
+				'Education > Language Courses' => __('Education > Language Courses'),
+				'Education > Training' => __('Education > Training'),
 				'Games &amp; Hobbies' => __('Games & Hobbies'),
-				'Automotive' => __('--  Automotive'),
-				'Aviation' => __('--  Aviation'),
-				'Hobbies' => __('--  Hobbies'),
-				'Other Games' => __('--  Other Games'),
-				'Video Games' => __('--  Video Games'),
+				'Games &amp; Hobbies > Automotive' => __('Games & Hobbies > Automotive'),
+				'Games &amp; Hobbies > Aviation' => __('Games & Hobbies > Aviation'),
+				'Games &amp; Hobbies > Hobbies' => __('Games & Hobbies > Hobbies'),
+				'Games &amp; Hobbies > Other Games' => __('Games & Hobbies > Other Games'),
+				'Games &amp; Hobbies > Video Games' => __('Games & Hobbies > Video Games'),
 				'Government &amp; Organizations' => __('Government & Organizations'),
-				'Local' => __('--  Local'),
-				'National' => __('--  National'),
-				'Non-Profit' => __('--  Non-Profit'),
-				'Regional' => __('--  Regional'),
+				'Government &amp; Organizations > Local' => __('Government & Organizations > Local'),
+				'Government &amp; Organizations > National' => __('Government & Organizations > National'),
+				'Government &amp; Organizations > Non-Profit' => __('Government & Organizations > Non-Profit'),
+				'Government &amp; Organizations > Regional' => __('Government & Organizations > Regional'),
 				'Health' => __('Health'),
-				'Alternative Health' => __('--  Alternative Health'),
-				'Fitness &amp; Nutrition' => __('--  Fitness & Nutrition'),
-				'Self-Help' => __('--  Self-Help'),
-				'Sexuality' => __('--  Sexuality'),
+				'Health > Alternative Health' => __('Health > Alternative Health'),
+				'Health > Fitness &amp; Nutrition' => __('Health > Fitness & Nutrition'),
+				'Health > Self-Help' => __('Health > Self-Help'),
+				'Health > Sexuality' => __('Health > Sexuality'),
 				'Kids &amp; Family' => __('Kids & Family'),
 				'Music' => __('Music'),
 				'News &amp; Politics' => __('News & Politics'),
 				'Religion &amp; Spirituality' => __('Religion & Spirituality'),
-				'Buddhism' => __('--  Buddhism'),
-				'Christianity' => __('--  Christianity'),
-				'Hinduism' => __('--  Hinduism'),
-				'Islam' => __('--  Islam'),
-				'Judaism' => __('--  Judaism'),
-				'Other' => __('--  Other'),
-				'Spirituality' => __('--  Spirituality'),
+				'Religion &amp; Spirituality > Buddhism' => __('Religion & Spirituality > Buddhism'),
+				'Religion &amp; Spirituality > Christianity' => __('Religion & Spirituality > Christianity'),
+				'Religion &amp; Spirituality > Hinduism' => __('Religion & Spirituality > Hinduism'),
+				'Religion &amp; Spirituality > Islam' => __('Religion & Spirituality > Islam'),
+				'Religion &amp; Spirituality > Judaism' => __('Religion & Spirituality > Judaism'),
+				'Religion &amp; Spirituality > Other' => __('Religion & Spirituality > Other'),
+				'Religion &amp; Spirituality > Spirituality' => __('Religion & Spirituality > Spirituality'),
 				'Science &amp; Medicine' => __('Science & Medicine'),
-				'Medicine' => __('--  Medicine'),
-				'Natural Sciences' => __('--  Natural Sciences'),
-				'Social Sciences' => __('--  Social Sciences'),
+				'Science &amp; Medicine > Medicine' => __('Science & Medicine > Medicine'),
+				'Science &amp; Medicine > Natural Sciences' => __('Science & Medicine > Natural Sciences'),
+				'Science &amp; Medicine > Social Sciences' => __('Science & Medicine > Social Sciences'),
 				'Society &amp; Culture' => __('Society & Culture'),
-				'History' => __('--  History'),
-				'Personal Journals' => __('--  Personal Journals'),
-				'Philosophy' => __('--  Philosophy'),
-				'Places &amp; Travel' => __('--  Places & Travel'),
+				'Society &amp; Culture > History' => __('Society & Culture > History'),
+				'Society &amp; Culture > Personal Journals' => __('Society & Culture > Personal Journals'),
+				'Society &amp; Culture > Philosophy' => __('Society & Culture > Philosophy'),
+				'Society &amp; Culture > Places &amp; Travel' => __('Society & Culture > Places & Travel'),
 				'Sports &amp; Recreation' => __('Sports & Recreation'),
-				'Amateur' => __('--  Amateur'),
-				'College &amp; High School' => __('--  College & High School'),
-				'Outdoor' => __('--  Outdoor'),
-				'Professional' => __('--  Professional'),
+				'Sports &amp; Recreation > Amateur' => __('Sports & Recreation > Amateur'),
+				'Sports &amp; Recreation > College &amp; High School' => __('Sports & Recreation > College & High School'),
+				'Sports &amp; Recreation > Outdoor' => __('Sports & Recreation > Outdoor'),
+				'Sports &amp; Recreation > Professional' => __('Sports & Recreation > Professional'),
 				'Technology' => __('Technology'),
-				'Gadgets' => __('--  Gadgets'),
-				'Tech News' => __('--  Tech News'),
-				'Podcasting' => __('--  Podcasting'),
-				'Software How-To' => __('--  Software How-To'),
+				'Technology > Gadgets' => __('Technology > Gadgets'),
+				'Technology > Tech News' => __('Technology > Tech News'),
+				'Technology > Podcasting' => __('Technology > Podcasting'),
+				'Technology > Software How-To' => __('Technology > Software How-To'),
 				'TV &amp; Film' => __('TV & Film'),
 		        )); ?>
 	    </div>
@@ -200,7 +215,9 @@
 
 <h2><?php echo __('Usage');?></h2>
 
-<p><?php echo __('This plugin has added a new item type called <em>Podcast Episode</em>. To add an item to the podcast feed, make sure to use the <em>Podcast Episode</em> item type, include an MP3 audio file, and enter a title and description. After saving the settings above, you may preview your feed at %s','<a href="'.WEB_ROOT.'/items/browse?output=podcast'.'" target="_blank">/items/browse?output=podcast</a>');?>.</p>
+<p><?php echo __('This plugin adds a new item type called <em>Podcast Episode</em>. To add an item to the podcast feed, make sure to use the <em>Podcast Episode</em> item type, include an MP3 audio file, and enter a Title and Description using Dublin Core (HTML paragraphs, links, and lists are allowed; other tags will be removed from the feed output). ');?></p>
+
+<p><?php echo __('After saving the plugin settings above, your feed will be available at %s','<a href="'.WEB_ROOT.'/items/browse?output=podcast'.'" target="_blank">/items/browse?output=podcast</a>.');?></p>
 
 <?php if(
 	get_option('podcast_image_url') && 
