@@ -13,12 +13,13 @@ $podcast_description = get_option('podcast_description') ? get_option('podcast_d
 $podcast_language = get_option('podcast_language') ? get_option('podcast_language') : null;
 $podcast_categories = get_option('podcast_category') ? get_option('podcast_category') : null; // @TODO: add multiple category support
 $podcast_type = get_option('podcast_type') ? get_option('podcast_type') : null;
+$podcast_parental_advisory = ($ex=get_option('podcast_parental_advisory')) ? ($ex == 1 ? 'yes' : 'no' ) : 'no';
 $podcast_copyright = date('Y').' '.$podcast_title; // @TODO: add option
 
 // XML Namespace Variables
 $itunesns='http://www.itunes.com/dtds/podcast-1.0.dtd';
 $atomns='http://www.w3.org/2005/Atom';
-$contentns="html";
+$contentns="http://purl.org/rss/1.0/modules/content/";
 
 // Create the Parent Channel XML
 $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ?>
@@ -41,19 +42,25 @@ $atomlink=$channel->addChild('link','',$atomns);
 
 $image=$channel->addChild('image','');
 	$image->addChild('url',$podcast_image_url);
-	$image->addChild('title',$podcast_title);
-	$image->addChild('link',$podcast_link);
 
+$itunesimage=$channel->addChild('image','',$itunesns);
+	$itunesimage->addAttribute('href',$podcast_image_url);
+	
 $owner=$channel->addChild('owner','', $itunesns);
 	$owner->addChild('email',$podcast_email, $itunesns);
 	$owner->addChild('name',$podcast_title, $itunesns);
 
 $channel->addChild('author',$podcast_author, $itunesns);
 $channel->addChild('type',$podcast_type, $itunesns);
+$channel->addChild('explicit',$podcast_parental_advisory, $itunesns);
 
-foreach(explode('>',$podcast_categories) as $podcast_category){
-	$cat=$channel->addChild('category',trim($podcast_category),$itunesns);
-}
+$cats=explode('>',$podcast_categories);
+	$cat=$channel->addChild('category','',$itunesns); 
+	$cat->addAttribute('text',trim($cats[0]));
+	if( count( $cats ) > 1 ){
+		$subcat=$cat->addChild('category','',$itunesns); 
+		$subcat->addAttribute('text',trim($cats[1])); 
+	}
 
 
 // Get Podcast Episodes
@@ -63,7 +70,7 @@ foreach( loop( 'items' ) as $item ){
 		// Item Variables
 		$episode_title=  metadata( $item, array( 'Dublin Core', 'Title' ) ) ? metadata( $item, array( 'Dublin Core', 'Title' ) ) : 'Untitled';
 		$episode_url = WEB_ROOT.'/items/show/'.$item->id;
-		$episode_guid=$url;
+		$episode_guid=$episode_url;
 		$episode_description=($d=metadata($item,array('Dublin Core','Description'))) ? strip_tags($d,'<p><ol><ul><li><a>') : 'No description';
 		$episode_is_explicit=($e=metadata($item,array('Item Type Metadata','Explicit'))) ? $e : false;
 		$episode_is_blocked=($b=metadata($item,array('Item Type Metadata','Block'))) ? $b : false;
@@ -89,14 +96,16 @@ foreach( loop( 'items' ) as $item ){
 			// Add the Item XML
 			$episode = $channel->addChild('item');
 			$episode->addChild('link',$episode_url);
-			$episode->addChild('pubDate',gmdate('r',$item->modified));
+			$episode->addChild('pubDate',$item->added);
 			$episode->addChild('title',$episode_title);
-			$episode->addChild('guid',$episode_guid);
+			$episode->addChild('title',$episode_title,$itunesns);
+			$episode->addChild('author',$podcast_author,$itunesns);
+			$episode->addChild('guid',$enclosure_url);
 			$episode->addChild('duration',$enclosure_duration,$itunesns);
 			if($episode_description){
 				$episode->addChild('description',$episode_description);
-				$episode->addChild('summary',$episode_description,$itunesns);
-				$episode->addChild('encoded',$episode_description,$contentns);
+				$episode->addChild('summary',strip_tags($episode_description),$itunesns);
+				$episode->addChild('encoded','<![CDATA['.$episode_description.']]',$contentns);
 			}
 			if(is_numeric($episode_season) && ($episode_season > 0)){
 				$episode->addChild('season',$episode_season,$itunesns);
@@ -106,7 +115,7 @@ foreach( loop( 'items' ) as $item ){
 				$episode->addChild('episode',$episode_order,$itunesns);
 			}
 			if($episode_type && (in_array( strtolower($episode_type), array('full','trailer','bonus') ) ) ){
-				$episode->addChild('type',$episode_type,$itunesns);
+				$episode->addChild('episodeType',$episode_type,$itunesns);
 			}
 			if($episode_is_explicit && ( in_array( strtolower($episode_is_explicit), array('yes','explicit','true','no','clean','false') ) ) ){
 				$episode->addChild('explicit',$episode_is_explicit,$itunesns);

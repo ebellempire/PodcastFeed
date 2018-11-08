@@ -23,7 +23,8 @@ class PodcastFeedPlugin extends Omeka_Plugin_AbstractPlugin{
 		'podcast_link'=>null,
 		'podcast_email'=>null,
 		'podcast_category'=>null,
-		'podcast_type'=>'episodic',
+		'podcast_type'=>null,
+		'podcast_parental_advisory'=>0,
 	);
 	
     public function hookConfigForm(){
@@ -40,6 +41,7 @@ class PodcastFeedPlugin extends Omeka_Plugin_AbstractPlugin{
         set_option('podcast_email', $_POST['podcast_email']);
         set_option('podcast_category', $_POST['podcast_category']);
         set_option('podcast_type', $_POST['podcast_type']);
+        set_option('podcast_parental_advisory', $_POST['podcast_parental_advisory']);
     }	 
     
 	public function filterItemsBrowsePerPage( $perPage ){
