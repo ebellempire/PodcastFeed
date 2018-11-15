@@ -105,7 +105,7 @@ foreach( loop( 'items' ) as $item ){
 			if($episode_description){
 				$episode->addChild('description',$episode_description);
 				$episode->addChild('summary',strip_tags($episode_description),$itunesns);
-				$episode->addChild('encoded','<![CDATA['.$episode_description.']]',$contentns);
+				$episode->addChild('encoded','<![CDATA['.$episode_description.']]>',$contentns);
 			}
 			if(is_numeric($episode_season) && ($episode_season > 0)){
 				$episode->addChild('season',$episode_season,$itunesns);
