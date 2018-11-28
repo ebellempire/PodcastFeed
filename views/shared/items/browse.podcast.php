@@ -84,7 +84,8 @@ foreach( loop( 'items' ) as $item ){
 				$enclosure_url=file_display_url($file,'original');
 				$enclosure_type=metadata($file, 'MIME Type');
 				$enclosure_size = metadata($file, 'Size');
-				$f = new MP3File($enclosure_url);
+				$enclosure_storagepath=$_SERVER['DOCUMENT_ROOT'].'/files/'.$file->getStoragePath('original');
+				$f = new MP3File($enclosure_storagepath);
 				$d = $f->getDuration();
 				$enclosure_duration = MP3File::formatTime($d);
 				continue; // ...we have a file so stop the loop here
@@ -101,7 +102,10 @@ foreach( loop( 'items' ) as $item ){
 			$episode->addChild('title',$episode_title,$itunesns);
 			$episode->addChild('author',$podcast_author,$itunesns);
 			$episode->addChild('guid',$enclosure_url);
-			$episode->addChild('duration',$enclosure_duration,$itunesns);
+			if($enclosure_duration){
+				$episode->addChild('duration',$enclosure_duration,$itunesns);
+			}
+			
 			if($episode_description){
 				$episode->addChild('description',$episode_description);
 				$episode->addChild('summary',strip_tags($episode_description),$itunesns);
