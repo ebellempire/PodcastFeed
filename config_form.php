@@ -47,76 +47,6 @@
 	        <p class="explanation">
 	            <?php echo __("Choose an approved podcast category."); ?>
 	        </p>
-	        <?php echo get_view()->formSelect('podcast_category', get_option('podcast_category'), null, array(
-				'' => __('Select a category'),
-				'Arts' => __('Arts'),
-				'Arts > Design' => __('Arts > Design'),
-				'Arts > Fashion & Beauty' => __('Arts > Fashion & Beauty'),
-				'Arts > Food' => __('Arts >  Food'),
-				'Literature' => __('Arts >  Literature'),
-				'Arts > Performing Arts' => __('Arts >  Performing Arts'),
-				'Arts > Visual Arts' => __('Arts > Visual Arts'),
-				'Business' => __('Business'),
-				'Business > Business News' => __('Business > Business News'),
-				'Business > Careers' => __('Business > Careers'),
-				'Business > Investing' => __('Business > Investing'),
-				'Business > Management & Marketing' => __('Business > Management & Marketing'),
-				'Business > Shopping' => __('Business > Shopping'),
-				'Comedy' => __('Comedy'),
-				'Education' => __('Education'),
-				'Education > Educational Technology' => __('Education > Educational Technology'),
-				'Education > Higher Education' => __('Education > Higher Education'),
-				'Education > K-12' => __('Education > K-12'),
-				'Education > Language Courses' => __('Education > Language Courses'),
-				'Education > Training' => __('Education > Training'),
-				'Games & Hobbies' => __('Games & Hobbies'),
-				'Games & Hobbies > Automotive' => __('Games & Hobbies > Automotive'),
-				'Games & Hobbies > Aviation' => __('Games & Hobbies > Aviation'),
-				'Games & Hobbies > Hobbies' => __('Games & Hobbies > Hobbies'),
-				'Games & Hobbies > Other Games' => __('Games & Hobbies > Other Games'),
-				'Games & Hobbies > Video Games' => __('Games & Hobbies > Video Games'),
-				'Government & Organizations' => __('Government & Organizations'),
-				'Government & Organizations > Local' => __('Government & Organizations > Local'),
-				'Government & Organizations > National' => __('Government & Organizations > National'),
-				'Government & Organizations > Non-Profit' => __('Government & Organizations > Non-Profit'),
-				'Government & Organizations > Regional' => __('Government & Organizations > Regional'),
-				'Health' => __('Health'),
-				'Health > Alternative Health' => __('Health > Alternative Health'),
-				'Health > Fitness & Nutrition' => __('Health > Fitness & Nutrition'),
-				'Health > Self-Help' => __('Health > Self-Help'),
-				'Health > Sexuality' => __('Health > Sexuality'),
-				'Kids & Family' => __('Kids & Family'),
-				'Music' => __('Music'),
-				'News & Politics' => __('News & Politics'),
-				'Religion & Spirituality' => __('Religion & Spirituality'),
-				'Religion & Spirituality > Buddhism' => __('Religion & Spirituality > Buddhism'),
-				'Religion & Spirituality > Christianity' => __('Religion & Spirituality > Christianity'),
-				'Religion & Spirituality > Hinduism' => __('Religion & Spirituality > Hinduism'),
-				'Religion & Spirituality > Islam' => __('Religion & Spirituality > Islam'),
-				'Religion & Spirituality > Judaism' => __('Religion & Spirituality > Judaism'),
-				'Religion & Spirituality > Other' => __('Religion & Spirituality > Other'),
-				'Religion & Spirituality > Spirituality' => __('Religion & Spirituality > Spirituality'),
-				'Science & Medicine' => __('Science & Medicine'),
-				'Science & Medicine > Medicine' => __('Science & Medicine > Medicine'),
-				'Science & Medicine > Natural Sciences' => __('Science & Medicine > Natural Sciences'),
-				'Science & Medicine > Social Sciences' => __('Science & Medicine > Social Sciences'),
-				'Society & Culture' => __('Society & Culture'),
-				'Society & Culture > History' => __('Society & Culture > History'),
-				'Society & Culture > Personal Journals' => __('Society & Culture > Personal Journals'),
-				'Society & Culture > Philosophy' => __('Society & Culture > Philosophy'),
-				'Society & Culture > Places & Travel' => __('Society & Culture > Places & Travel'),
-				'Sports & Recreation' => __('Sports & Recreation'),
-				'Sports & Recreation > Amateur' => __('Sports & Recreation > Amateur'),
-				'Sports & Recreation > College & High School' => __('Sports & Recreation > College & High School'),
-				'Sports & Recreation > Outdoor' => __('Sports & Recreation > Outdoor'),
-				'Sports & Recreation > Professional' => __('Sports & Recreation > Professional'),
-				'Technology' => __('Technology'),
-				'Technology > Gadgets' => __('Technology > Gadgets'),
-				'Technology > Tech News' => __('Technology > Tech News'),
-				'Technology > Podcasting' => __('Technology > Podcasting'),
-				'Technology > Software How-To' => __('Technology > Software How-To'),
-				'TV & Film' => __('TV & Film'),
-		        )); ?>
 	    </div>
 	</div>	
 
@@ -257,6 +187,7 @@
 		});
 	</script>
 <?php endif;?>
+				<?php echo get_view()->formSelect('podcast_category', get_option('podcast_category'), null, get_podcast_categories()); ?>
 
 <h2><?php echo __('About Podcast Distribution');?></h2>
 <p><?php echo __('Once you have added some episodes, follow the usual steps to distribute your podcast. It is strongly recommended to register your podcast with <strong>both</strong> the Apple and Google podcast directories. The Apple directory is generally considered to be the most critical.');?></p>
