@@ -1,3 +1,5 @@
+<?php include 'functions.php';?>
+
 <style>
 	.helper{font-size:.95em;opacity:0.9;font-style: italic;margin-top:0;}
 	#podcast-feed-settings .input-block{width:100%;float: none;}

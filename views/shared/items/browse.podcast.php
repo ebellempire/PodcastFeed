@@ -1,6 +1,6 @@
 <?php
 // Helpers
-require_once 'helpers.php';
+require_once __DIR__ . '/../../../functions.php';
 
 // Channel Variables
 $location = WEB_ROOT.'/items/browse?output=podcast';
