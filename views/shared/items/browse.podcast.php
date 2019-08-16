@@ -36,31 +36,31 @@ $channel->addChild('title',$podcast_title);
 $channel->addChild('copyright',$podcast_copyright);
 
 $atomlink=$channel->addChild('link','',$atomns);
-	$atomlink->addAttribute('href',WEB_ROOT.$_SERVER['REQUEST_URI']);
-	$atomlink->addAttribute('rel',"self");
-	$atomlink->addAttribute('type',"application/rss+xml");
+$atomlink->addAttribute('href',WEB_ROOT.$_SERVER['REQUEST_URI']);
+$atomlink->addAttribute('rel',"self");
+$atomlink->addAttribute('type',"application/rss+xml");
 
 $image=$channel->addChild('image','');
-	$image->addChild('url',$podcast_image_url);
+$image->addChild('url',$podcast_image_url);
 
 $itunesimage=$channel->addChild('image','',$itunesns);
-	$itunesimage->addAttribute('href',$podcast_image_url);
-	
+$itunesimage->addAttribute('href',$podcast_image_url);
+
 $owner=$channel->addChild('owner','', $itunesns);
-	$owner->addChild('email',$podcast_email, $itunesns);
-	$owner->addChild('name',$podcast_title, $itunesns);
+$owner->addChild('email',$podcast_email, $itunesns);
+$owner->addChild('name',$podcast_title, $itunesns);
 
 $channel->addChild('author',$podcast_author, $itunesns);
 $channel->addChild('type',$podcast_type, $itunesns);
 $channel->addChild('explicit',$podcast_parental_advisory, $itunesns);
 
 $cats=explode('>',$podcast_categories);
-	$cat=$channel->addChild('category','',$itunesns); 
-	$cat->addAttribute('text',trim($cats[0]));
-	if( count( $cats ) > 1 ){
-		$subcat=$cat->addChild('category','',$itunesns); 
-		$subcat->addAttribute('text',trim($cats[1])); 
-	}
+$cat=$channel->addChild('category','',$itunesns);
+$cat->addAttribute('text',trim($cats[0]));
+if( count( $cats ) > 1 ){
+	$subcat=$cat->addChild('category','',$itunesns);
+	$subcat->addAttribute('text',trim($cats[1]));
+}
 
 
 // Get Podcast Episodes
@@ -105,7 +105,7 @@ foreach( loop( 'items' ) as $item ){
 			if($enclosure_duration){
 				$episode->addChild('duration',$enclosure_duration,$itunesns);
 			}
-			
+
 			if($episode_description){
 				$episode->addChild('description',$episode_description);
 				$episode->addChild('summary',strip_tags($episode_description),$itunesns);
@@ -128,9 +128,9 @@ foreach( loop( 'items' ) as $item ){
 				$episode->addChild('block',$episode_is_blocked,$itunesns);
 			}
 			$enclosure=$episode->addChild('enclosure','');
-				$enclosure->addAttribute('url',$enclosure_url);
-				$enclosure->addAttribute('length',$enclosure_size);
-				$enclosure->addAttribute('type',$enclosure_type);
+			$enclosure->addAttribute('url',$enclosure_url);
+			$enclosure->addAttribute('length',$enclosure_size);
+			$enclosure->addAttribute('type',$enclosure_type);
 
 		}
 	}
