@@ -38,30 +38,31 @@ class MP3File{
 		$duration=0;
 		$block = fread($fd, 100);
 		$offset = $this->skipID3v2Tag($block);
-		fseek($fd, $offset, SEEK_SET);
-		while (!feof($fd))
-		{
-			$block = fread($fd, 10);
-			if (strlen($block)<10) { break; }
-			//looking for 1111 1111 111 (frame synchronization bits)
-			else if ($block[0]=="\xff" && (ord($block[1])&0xe0) )
+		if(fseek($fd, $offset, SEEK_CUR) === 0){ // fseek supported by file
+			fseek($fd, $offset, SEEK_SET);
+			while (!feof($fd)){
+				$block = fread($fd, 10);
+				if (strlen($block)<10) { break; }
+				//looking for 1111 1111 111 (frame synchronization bits)
+				else if ($block[0]=="\xff" && (ord($block[1])&0xe0) )
+					{
+						$info = self::parseFrameHeader(substr($block, 0, 4));
+						if (empty($info['Framesize'])) { return $duration; } //some corrupt mp3 files
+						fseek($fd, $info['Framesize']-10, SEEK_CUR);
+						$duration += ( $info['Samples'] / $info['Sampling Rate'] );
+					}
+				else if (substr($block, 0, 3)=='TAG')
+					{
+						fseek($fd, 128-10, SEEK_CUR);//skip over id3v1 tag size
+					}
+				else
 				{
-					$info = self::parseFrameHeader(substr($block, 0, 4));
-					if (empty($info['Framesize'])) { return $duration; } //some corrupt mp3 files
-					fseek($fd, $info['Framesize']-10, SEEK_CUR);
-					$duration += ( $info['Samples'] / $info['Sampling Rate'] );
+					fseek($fd, -9, SEEK_CUR);
 				}
-			else if (substr($block, 0, 3)=='TAG')
+				if ($use_cbr_estimate && !empty($info))
 				{
-					fseek($fd, 128-10, SEEK_CUR);//skip over id3v1 tag size
+					return $this->estimateDuration($info['Bitrate'],$offset);
 				}
-			else
-			{
-				fseek($fd, -9, SEEK_CUR);
-			}
-			if ($use_cbr_estimate && !empty($info))
-			{
-				return $this->estimateDuration($info['Bitrate'],$offset);
 			}
 		}
 		return round($duration);
