@@ -65,7 +65,7 @@ if( count( $cats ) > 1 ){
 
 // Get Podcast Episodes
 foreach( loop( 'items' ) as $item ){
-	if($item->getItemType()['name'] == 'Podcast Episode'){
+	if($item->getItemType() && $item->getItemType()['name'] == 'Podcast Episode'){
 
 		// Item Variables
 		$episode_title=  metadata( $item, array( 'Dublin Core', 'Title' ) ) ? metadata( $item, array( 'Dublin Core', 'Title' ) ) : 'Untitled';
